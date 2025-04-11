@@ -23,7 +23,7 @@ export default function TaskPage() {
             <div className="bg-[#ffba00] rounded-full h-10 w-10 flex justify-center mr-2 items-center">
               <User strokeWidth={2} color="#ffffff" />
             </div>
-            <p className="px-1">Hi, Chandan Singh (admin)</p>
+            <p className="px-1">Hi, Suraj Poswal (admin)</p>
           </div>
         </div>
 

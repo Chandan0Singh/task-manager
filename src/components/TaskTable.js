@@ -310,7 +310,7 @@ const rowRefs = useRef({});
             </thead>
             <tbody className="w-8xl text-sm">
               {tasks.map((task, index) => (
-                <tr key={task.id} cclassName={`bg-white hover:bg-yellow-100 ${
+                <tr key={task.id} className={`bg-white hover:bg-yellow-100 ${
                   highlightedRow === task.id ? "bg-yellow-300 animate-pulse" : ""
                 }`} ref={(el) => (rowRefs.current[task.id] = el)} >
                   
