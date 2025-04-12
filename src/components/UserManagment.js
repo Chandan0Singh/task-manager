@@ -1,24 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown ,faCalendarDays} from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import CreateTask from "./createTaskForm"
-import { useRef } from "react";
-
+import CreateTask from "./createTaskForm";
 
 const TaskTable = () => {
-  const [startDate, setStartDate] = useState(new Date());
   const [tasks, setTasks] = useState([
     {
-      sNo: 1,
+      id: 1,
       client: "Jungle morels",
       projectName: "Office Operations",
       subject: "Making salaries",
       createdBy: "Suraj Poswal",
-      assignTo: "Aman Negi",
+      assignTo: "Aman ",
+      assignToSurname:"Negi",
       inputsReceived: "21/03/25",
       startDate: "21/03/25",
       deadline: "24/03/25",
@@ -29,12 +27,13 @@ const TaskTable = () => {
       feedbackSent: "21/03/25"
     },
     {
-      sNo: 2,
+      id: 2,
       client: "CH BZR",
       projectName: "Character Bazaar",
       subject: "Work on Add",
       createdBy: "Self",
-      assignTo: "Vishal Bisht",
+      assignTo: "Vishal",
+      assignToSurname:" Bisht",
       inputsReceived: "21/03/25",
       startDate: "21/03/25",
       deadline: "24/03/25",
@@ -45,12 +44,13 @@ const TaskTable = () => {
       feedbackSent: "21/03/25"
     },
     {
-      sNo: 3,
+      id: 3,
       client: "CH BZR",
       projectName: "Character Bazaar",
       subject: "Work on Add",
       createdBy: "Self",
-      assignTo: "Vishal Bisht",
+      assignTo: "Vishal",
+      assignToSurname:" Bisht",
       inputsReceived: "21/03/25",
       startDate: "21/03/25",
       deadline: "24/03/25",
@@ -61,12 +61,13 @@ const TaskTable = () => {
       feedbackSent: "21/03/25"
     },
     {
-      sNo: 4,
+      id: 4,
       client: "CH BZR",
       projectName: "Character Bazaar",
       subject: "Work on Add",
       createdBy: "Self",
-      assignTo: "Vishal Bisht",
+      assignTo: "Vishal",
+      assignToSurname:" Bisht",
       inputsReceived: "21/03/25",
       startDate: "21/03/25",
       deadline: "24/03/25",
@@ -77,12 +78,13 @@ const TaskTable = () => {
       feedbackSent: "21/03/25"
     },
     {
-      sNo: 5,
+      id: 5,
       client: "CH BZR",
       projectName: "Character Bazaar",
       subject: "Work on Add",
       createdBy: "Self",
-      assignTo: "Vishal Bisht",
+      assignTo: "Vishal",
+      assignToSurname:" Bisht",
       inputsReceived: "21/03/25",
       startDate: "21/03/25",
       deadline: "24/03/25",
@@ -94,416 +96,206 @@ const TaskTable = () => {
     }
   ]);
 
-  const statuses = ["Done", "Pending", "Late", "In Review", "Open"];
-
-  const [selectedStatus, setSelectedStatus] = useState("Open");
   const [showForm, setShowForm] = useState(false);
   const [count, setCount] = useState(tasks.length + 1);
-  const [showOPtion, setShowOption] = useState(null);
-  const [showCalender, setShowCalender] = useState(false)
   const [activePicker, setActivePicker] = useState({ id: null, field: null });
-  const [searchTerm, setSearchTerm]= useState("")
-  const [showSuggstion, setShowSuggstion] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSuggestion, setShowSuggestion] = useState(false);
   const [highlightedRow, setHighlightedRow] = useState(null);
+  const [statusDropdown, setStatusDropdown] = useState(null);
 
-
-// Create a ref object to store refs for each task row
-const rowRefs = useRef({});
-
-
-  const [newTask, setNewTask] = useState({
-    client: "",
-    projectName: "",
-    subject: "",
-    createdBy: "",
-    assignTo: "",
-    inputsReceived: "",
-    startDate: "",
-    deadline: "",
-    time: "",
-    deadline: "",
-    status: "",
-    sentToClient: "",
-      feedbackReceived: "",
-      feedbackSent: ""
-  });
-
-  const statusHandler = (id, newStatus) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, status: newStatus } : task
-      )
-    );
-  };
-
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setNewTask({
-      id: count,
-      client: "",
-      project: "",
-      subject: "",
-      createdBy: "",
-      assignedTo: "",
-      startDate: "",
-      time: "",
-      deadline: "",
-      status: "Open",
-    });
-    setTasks([...tasks, newTask]);
-    setCount(count + 1);
-    setShowForm(false);
-
-    console.log(count);
-  };
-
-  const handleClose = (id) => {
-    setTasks(tasks.filter((task) => task.id != id));
-  };
-
-  const handleChildData = (data)=>{
-    setTasks((prev) => [...prev, data]); 
-  }
-  const handlehiddeForm =() =>{
-    setShowForm(false)
-  }
+  const rowRefs = useRef({});
+  const statuses = ["Done", "Pending", "Late", "In Review", "Open"];
 
   useEffect(() => {
-    if (searchTerm.trim().length > 0) {
-      setShowSuggstion(true);
-    } else {
-      setShowSuggstion(false);
-    }
+    setShowSuggestion(searchTerm.trim().length > 0);
   }, [searchTerm]);
 
   const filteredSuggestions = tasks.filter(task =>
     task.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    task.project.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    task.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     task.subject.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
+  const handleStatusChange = (id, newStatus) => {
+    setTasks(tasks.map(task => task.id === id ? { ...task, status: newStatus } : task));
+    setStatusDropdown(null);
+  };
+
+  const handleCalendarChange = (id, field, date) => {
+    const formattedDate = date.toLocaleDateString("en-GB");
+    setTasks(tasks.map(task =>
+      task.id === id ? { ...task, [field]: formattedDate } : task
+    ));
+    setActivePicker({ id: null, field: null });
+  };
+
+  const handleAddTask = (newTask) => {
+    setTasks(prev => [...prev, { ...newTask, id: count }]);
+    setCount(prev => prev + 1);
+    setShowForm(false);
+  };
+
+  const handleSearchSelect = (task) => {
+    setSearchTerm(task.subject);
+    setShowSuggestion(false);
+    const row = rowRefs.current[task.id];
+    if (row) {
+      row.scrollIntoView({ behavior: "smooth", block: "center" });
+      setHighlightedRow(task.id);
+      setTimeout(() => setHighlightedRow(null), 2000);
+    }
+  };
+
+  const handleDelete = (id) => {
+    setTasks(tasks.filter(task => task.id !== id));
+  };
 
   return (
     <>
-    {showForm &&
-     <div className="absolute w-[100vw] h-fit flex justify-center items-center">
-     <CreateTask
-        onData={handleChildData}
-        onClose={handlehiddeForm}/>
-   </div>
-    }
-   
-    
-    <div className="flex relative mx-auto ">
-      
-      <div className="  mx-auto w-7xl">
-        {/* Search Bar */}
-        <div className="flex justify-between mb-3">
-          <div className="flex items-center">
-            <p className=" pr-2 text-lg font-semibold">Search :</p>
-            <input
-
-              value={searchTerm}
-              onChange={(e)=>setSearchTerm(e.target.value)}
-              placeholder="Search task..."
-              className="w-96 py-1 pl-6 px-1 border border-none bg-gray-200 rounded-full focus:outline-none focus:ring-2"
-            /> 
-          </div>
-          { searchTerm &&
-          <div className="w-96 max-h-[200px] overflow-y-auto rounded-[15px] absolute top-[5vh] left-[11vw] py-2 bg-white border-2 border-[#ffba00] z-50 shadow-md">
-          {filteredSuggestions.map((suggestion, i) => (
-            <div
-              key={i}
-              onClick={() => {
-                setSearchTerm(suggestion.subject);  // Or project/client etc.
-                setShowSuggstion(false);
-
-                const targetRow = rowRefs.current[suggestion.id];
-                if (targetRow) {
-                  targetRow.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                  });
-                }
-                // 👇 Highlight row for some time
-                setHighlightedRow(suggestion.id);
-                setTimeout(() => {
-                  setHighlightedRow(null);
-                }, 2000); // highlight for 2 seconds
-              }}
-              className="cursor-pointer px-4 py-2 hover:bg-[#ffba00]  transition-all"
-            >
-              {suggestion.client} - {suggestion.project}
-            </div>
-          ))}
-          {filteredSuggestions.length === 0 && (
-            <div className="text-center text-gray-600 py-2">No results found.</div>
-          )}
+      {showForm && (
+        <div className="absolute w-full flex justify-center z-50">
+          <CreateTask onData={handleAddTask} onClose={() => setShowForm(false)} />
         </div>
+      )}
 
-          }
-          
+      <div className="flex relative mx-auto w-fit">
+        <div className="w-full">
+          {/* Search & Create Task */}
+          <div className="flex justify-between mb-3 w-[90%] mx-auto">
+            <div className="flex items-center">
+              <p className="pr-2 text-lg font-semibold">Search:</p>
+              <input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search task..."
+                className="w-96 py-1 pl-6 bg-gray-200 rounded-full focus:outline-none focus:ring-2"
+              />
+            </div>
 
-          
-          <div>
+            {showSuggestion && (
+              <div className="w-96 max-h-[200px] overflow-y-auto rounded-[15px] absolute top-[5vh] left-[11vw] py-2 bg-white border-2 border-[#ffba00] z-50 shadow-md">
+                {filteredSuggestions.map((s, i) => (
+                  <div
+                    key={i}
+                    onClick={() => handleSearchSelect(s)}
+                    className="cursor-pointer px-4 py-2 hover:bg-[#ffba00]"
+                  >
+                    {s.client} - {s.projectName}
+                  </div>
+                ))}
+                {filteredSuggestions.length === 0 && (
+                  <div className="text-center text-gray-600 py-2">No results found.</div>
+                )}
+              </div>
+            )}
+
             <button
-              onClick={() => setShowForm(!showForm)}
-              className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-700 transition duration-200 "
+              onClick={() => setShowForm(true)}
+              className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-700"
             >
               Create Task
             </button>
           </div>
-        </div>
 
-        
-       
-
-        {/* Task Table */}
-        <div className="h-[44vh] w-fit overflow-y-auto scroll scrollbar">
-          <div className=" rounded-[20px] border-2 border-[#ffba00] h-[44vh] me-2 overflow-x-hidden">
-          <table className="  text-center w-7xl">
-            <thead className=" text-sm">
-              <tr className="text-[1rem]">
-                {[
-                  "S no.",
-                  "Client",
-                  "Project Name",
-                  "Subject",
-                  "Created By",
-                  "Assign To",
-                  "Inputs Received ",
-                  "Start Date",
-                  "Deadline",
-                  "Time",
-                  "Status",
-                  "Sent to client ",
-                  "Feedback Received",
-                  "FeedbackSent",
-                ].map((heading) => (
-                  <th
-                    key={heading}
-                    className="border border-[#ffba00] px-4 py-2"
-                  >
-                    {heading}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="w-8xl text-sm">
-              {tasks.map((task, index) => (
-                <tr key={task.id} className={`bg-white hover:bg-yellow-100 ${
-                  highlightedRow === task.id ? "bg-yellow-300 animate-pulse" : ""
-                }`} ref={(el) => (rowRefs.current[task.id] = el)} >
-                  
-                  <td className="border-2 border-[#ffba00] px-4 py-1 ">
-                    {index + 1}
-                  </td>
-                  <td className="border-2 border-[#ffba00] px-4 py-1 ">
-                    {task.client}
-                  </td>
-                  <td className="border-2 border-[#ffba00] px-4 py-1 ">
-                    {task.projectName}
-                  </td>
-                  <td className="border-2 border-[#ffba00] px-4 py-1 ">
-                    {task.subject}
-                  </td>
-                  <td className="border-2 border-[#ffba00] px-4 py-1 ">
-                    {task.createdBy}
-                  </td>
-                  <td className="border-2 border-[#ffba00] px-4 py-1 ">
-                    <span className="bg-blue-500 text-sm block  text-white px-3 py-1 rounded-full">
-                      {task.assignTo}
-                    </span>
-                  </td>
-                  <td className="border-2 border-[#ffba00] px-4 py-1">
-                    {task.inputsReceived}
-                    <FontAwesomeIcon
-                      icon={faCalendarDays}
-                      onClick={() => setActivePicker({ id: task.id, field: "startDate" })}
-                      className="text-yellow-600 cursor-pointer lg:ms-1.5"
-                     />
-
-                      {activePicker.id === task.id && activePicker.field === "startDate" && (
-                        <div className="absolute z-50 mt-2">
-                          <DatePicker
-                            selected={new Date()}
-                            onChange={(date) => {
-                              const formattedDate = date.toLocaleDateString("en-GB");
-                              setTasks((prev) =>
-                                prev.map((t) =>
-                                  t.id === task.id ? { ...t, startDate: formattedDate } : t
-                                )
-                              );
-                              setActivePicker({ id: null, field: null });
-                            }}
-                            inline
-                          />
-                        </div>
-                      )}
-                  </td>
-                  <td className="border-2 border-[#ffba00] px-4 py-1">
-                    {task.startDate}
-                    <FontAwesomeIcon
-                      icon={faCalendarDays}
-                      onClick={() => setActivePicker({ id: task.id, field: "startDate" })}
-                      className="text-yellow-600 cursor-pointer lg:ms-1.5"
-                     />
-
-                      {activePicker.id === task.id && activePicker.field === "startDate" && (
-                        <div className="absolute z-50 mt-2">
-                          <DatePicker
-                            selected={new Date()}
-                            onChange={(date) => {
-                              const formattedDate = date.toLocaleDateString("en-GB");
-                              setTasks((prev) =>
-                                prev.map((t) =>
-                                  t.id === task.id ? { ...t, startDate: formattedDate } : t
-                                )
-                              );
-                              setActivePicker({ id: null, field: null });
-                            }}
-                            inline
-                          />
-                        </div>
-                      )}
-                  </td>
-                  <td className="border-2 border-[#ffba00] px-4 py-1">
-                    {task.deadline}
-                    <FontAwesomeIcon
-                      icon={faCalendarDays}
-                      onClick={() => setActivePicker({ id: task.id, field: "deadline" })}
-                      className="text-yellow-600 cursor-pointer lg:ms-1.5"
-                     />
-                     {activePicker.id === task.id && activePicker.field === "deadline" && (
-                        <div className="absolute z-50 mt-2">
-                          <DatePicker
-                            selected={new Date()}
-                            onChange={(date) => {
-                              const formattedDate = date.toLocaleDateString("en-GB");
-                              setTasks((prev) =>
-                                prev.map((t) =>
-                                  t.id === task.id ? { ...t, deadline: formattedDate } : t
-                                )
-                              );
-                              setActivePicker({ id: null, field: null });
-                            }}
-                            inline
-                          />
-                        </div>
-                      )}
-                  </td>
-                  
-                  <td className="border-2 border-[#ffba00] px-4 py-1">
-                  {task.time} 
-                  </td>
-                 
-                  <td className="border-2 border-[#ffba00] px-1 relative">
-                    <span
-                      className={`text-white px-2 py-1 rounded-full cursor-pointer text-center ${
-                        task.status === "Done"
-                          ? "bg-green-500"
-                        : task.status === "Pending"
-                          ? "bg-purple-500"
-                          : task.status === "Late"
-                          ? "bg-red-500"
-                          : task.status === "Open"
-                        ? "bg-[#ffba00]"
-                          : task.status === "In Review"
-                          ? "bg-blue-500"
-                          : "bg-gray-500"
-                        }`}
-                      onClick={() => setShowOption(task.id)} // Change to task.id based logic
-                    >
-                      {task.status} <FontAwesomeIcon icon={faCaretDown} />
-                    </span>
-                 
-                  {showOPtion === task.id && (
-                   <div className="border mt-1 left-[-50%] shadow-md w-max text-center bg-[#616262] rounded-[20px]  text-white px-4py-1 py-2 text-lg px-[1.5rem] absolute z-9 flex flex-col items-center">
-                     {statuses.map((status) => (
-                       <div
-                          key={status}
-                          onClick={() => {
-                            statusHandler(task.id, status);
-                            setShowOption(null);
-                          }}
-                          className="cursor-pointer py-1 text-sm px-[3rem] w-full hover:bg-[#ffba00] hover:rounded-full"
-                        >
-                          {status}
-                        </div>
-                      ))}
-                     </div>
-                    )}
-                  </td>
-
-                  <td className="border-2 border-[#ffba00] px-4 py-1">
-                    <button
-                      onClick={() => handleClose(task.id)}
-                      className="bg-red-500 text-white px-4 py-1 rounded-full text-sm  hover:bg-red-700 transition duration-200 cursor-pointer"
-                    >
-                      Close
-                    </button>
-                  </td>
-                  <td className="border-2 border-[#ffba00] px-4 py-1">
-                    {task.feedbackReceived}
-                    <FontAwesomeIcon
-                      icon={faCalendarDays}
-                      onClick={() => setActivePicker({ id: task.id, field: "startDate" })}
-                      className="text-yellow-600 cursor-pointer lg:ms-1.5"
-                     />
-
-                      {activePicker.id === task.id && activePicker.field === "startDate" && (
-                        <div className="absolute z-50 mt-2">
-                          <DatePicker
-                            selected={new Date()}
-                            onChange={(date) => {
-                              const formattedDate = date.toLocaleDateString("en-GB");
-                              setTasks((prev) =>
-                                prev.map((t) =>
-                                  t.id === task.id ? { ...t, startDate: formattedDate } : t
-                                )
-                              );
-                              setActivePicker({ id: null, field: null });
-                            }}
-                            inline
-                          />
-                        </div>
-                      )}
-                  </td>
-                  <td className="border-2 border-[#ffba00] px-4 py-1">
-                    {task.feedbackSent}
-                    <FontAwesomeIcon
-                      icon={faCalendarDays}
-                      onClick={() => setActivePicker({ id: task.id, field: "startDate" })}
-                      className="text-yellow-600 cursor-pointer lg:ms-1.5"
-                     />
-
-                      {activePicker.id === task.id && activePicker.field === "startDate" && (
-                        <div className="absolute z-50 mt-2">
-                          <DatePicker
-                            selected={new Date()}
-                            onChange={(date) => {
-                              const formattedDate = date.toLocaleDateString("en-GB");
-                              setTasks((prev) =>
-                                prev.map((t) =>
-                                  t.id === task.id ? { ...t, startDate: formattedDate } : t
-                                )
-                              );
-                              setActivePicker({ id: null, field: null });
-                            }}
-                            inline
-                          />
-                        </div>
-                      )}
-                  </td>
+          {/* Task Table */}
+          <div className="overflow-y-auto w-[90%] h-[44vh] border-2 border-[#ffba00] rounded-[20px] overflow-auto mx-auto">
+            <table className="w-max text-sm text-center">
+              <thead>
+                <tr>
+                  {[
+                    "S No.", "Client", "Project Name", "Subject", "Created By", "Assign To",
+                    "Inputs Received", "Start Date", "Deadline", "Feedback Received", "Feedback Sent" ,"Time" , "Status",
+                    "Sent to Client",
+                  ].map((head) => (
+                    <th key={head} className="border border-[#ffba00] px-2 py-1">{head}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tasks.map((task, idx) => (
+                  <tr
+                    key={task.id}
+                    ref={(el) => rowRefs.current[task.id] = el}
+                    className={`bg-white hover:bg-yellow-100 ${highlightedRow === task.id ? "bg-yellow-300 animate-pulse" : ""}`}
+                  >
+                    <td className="border border-[#ffba00] px-2">{idx + 1}</td>
+                    <td className="border border-[#ffba00] px-2">{task.client}</td>
+                    <td className="border border-[#ffba00] px-2">{task.projectName}</td>
+                    <td className="border border-[#ffba00] px-2">{task.subject}</td>
+                    <td className="border border-[#ffba00] px-2">{task.createdBy}</td>
+                    <td className="border border-[#ffba00] px-2">
+                      <span className="bg-blue-500 text-white px-3 py-1 rounded-full">{task.assignTo} {task.assignToSurname}</span>
+                    </td>
+
+                    {["inputsReceived", "startDate", "deadline", "feedbackReceived", "feedbackSent"].map((field) => (
+                      <td key={field} className="border px-2 border-[#ffba00] relative">
+                        {task[field]}
+                        <FontAwesomeIcon
+                          icon={faCalendarDays}
+                          onClick={() => setActivePicker({ id: task.id, field })}
+                          className="text-yellow-600 cursor-pointer ml-2"
+                        />
+                        {activePicker.id === task.id && activePicker.field === field && (
+                          <div className="absolute z-50 mt-2">
+                            <DatePicker
+                              selected={new Date()}
+                              onChange={(date) => handleCalendarChange(task.id, field, date)}
+                              inline
+                            />
+                          </div>
+                        )}
+                      </td>
+                    ))}
+
+                    <td className="border px-2 border-[#ffba00]">{task.time}</td>
+
+                    <td className="border px-2 border-[#ffba00] relative">
+                      <span
+                        onClick={() => setStatusDropdown(task.id)}
+                        className={`cursor-pointer px-2 py-1 rounded-full text-white ${
+                          {
+                            "Done": "bg-green-500",
+                            "Pending": "bg-purple-500",
+                            "Late": "bg-red-500",
+                            "Open": "bg-yellow-500",
+                            "In Review": "bg-blue-500"
+                          }[task.status] || "bg-gray-500"
+                        }`}
+                      >
+                        {task.status} <FontAwesomeIcon icon={faCaretDown} />
+                      </span>
+
+                      {statusDropdown === task.id && (
+                        <div className="absolute bg-[#616262] text-white w-[10vw] left-[-2vw] rounded-[20px] z-10 mt-1 py-2 shadow-md overflow-hidden">
+                          {statuses.map(status => (
+                            <div
+                              key={status}
+                              onClick={() => handleStatusChange(task.id, status)}
+                              className="px-4 py-1 hover:bg-[#ffba00] cursor-pointer"
+                            >
+                              {status}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </td>
+
+                    <td className="border px-2 border-[#ffba00]">
+                      <button
+                        onClick={() => handleDelete(task.id)}
+                        className="bg-red-500 text-white px-3 py-1 my-1 rounded-full text-sm hover:bg-red-700"
+                      >
+                        Close
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 };

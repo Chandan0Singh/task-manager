@@ -5,6 +5,8 @@ import DepartmentTable from "@components/Departmentable";
 import Logo from "@assets/Logo.jpeg";
 import NavigationBar from "@components/NavigationBar";
 import { useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 export default function TaskPage() {
     const [isshowoption, setIsshowoption] = useState(false)
@@ -42,21 +44,56 @@ export default function TaskPage() {
             </p>
           </div>
           <div className="flex flex-col w-[12rem]">
-            <label className="mb-2 text-center">Select Departments</label>
-            <div onClick={()=>setIsshowoption(!isshowoption)} className="text-center bg-[#ffba00] rounded-full px-4 py-1 text-lg mb-1 relative">
-            {slectedOption}
-            </div>
-            {isshowoption && 
-              <div className="text-center bg-[#616262] text-white rounded-[20px]  px-4py-1 py-2 text-lg block px-[1.5rem] relative z-9">
-              <div onClick={()=>setSelectedOption("All")} value="All" className="">All</div>
-                <div onClick={()=>setSetSelectedOption("Developing")} value="Developing" className="cursor-pointer py-1 text-sm  w-full hover:bg-[#ffba00] hover:rounded-full">Developing</div>
-                <div onClick={()=>setSetSelectedOption("Sales")}  value="Sales" className="cursor-pointer py-1 text-sm  w-full hover:bg-[#ffba00] hover:rounded-full">Manager</div>
-                <div onClick={()=> setSetSelectedOption("Animation")}  value="Animation" className="cursor-pointer py-1 text-sm  w-full hover:bg-[#ffba00] hover:rounded-full">Animation</div>
-                <div onClick={()=>setSetSelectedOption("Dig. Makreting")} value="Dig. Makreting" className="cursor-pointer py-1 text-sm  w-full hover:bg-[#ffba00] hover:rounded-full whitespace-nowrap ">Dig. Makreting</div>
-              </div>
-            }
-            
-          </div>
+  <label className="mb-2 text-center">Select Departments</label>
+
+  {/* Wrap button + dropdown in a relative container */}
+  <div className="relative">
+    <div
+      onClick={() => setIsshowoption(!isshowoption)}
+      className="text-center bg-[#ffba00] rounded-full px-4 py-1 text-lg mb-1 flex items-center justify-center gap-1 cursor-pointer"
+    >
+      {slectedOption}
+      <FontAwesomeIcon icon={faCaretDown} className="w-5" />
+    </div>
+
+    {/* Dropdown */}
+    {isshowoption && (
+      <div className="absolute top-full left-0 w-full  bg-[#616262] text-white rounded-[20px] py-2 text-lg z-10 shadow-md text-center">
+        <div
+          onClick={() => setSetSelectedOption("All")}
+          className="cursor-pointer py-1 text-sm hover:bg-[#ffba00] hover:rounded-full"
+        >
+          All
+        </div>
+        <div
+          onClick={() => setSetSelectedOption("Developing")}
+          className="cursor-pointer py-1 text-sm hover:bg-[#ffba00] hover:rounded-full"
+        >
+          Developing
+        </div>
+        <div
+          onClick={() => setSetSelectedOption("Sales")}
+          className="cursor-pointer py-1 text-sm hover:bg-[#ffba00] hover:rounded-full"
+        >
+          Sales
+        </div>
+        <div
+          onClick={() => setSetSelectedOption("Animation")}
+          className="cursor-pointer py-1 text-sm hover:bg-[#ffba00] hover:rounded-full"
+        >
+          Animation
+        </div>
+        <div
+          onClick={() => setSetSelectedOption("Dig. Marketing")}
+          className="cursor-pointer py-1 text-sm hover:bg-[#ffba00] hover:rounded-full whitespace-nowrap"
+        >
+          Dig. Marketing
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
         </div>
       </div>
       {/* Task Table */}

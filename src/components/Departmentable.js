@@ -128,17 +128,17 @@ const TaskTable = () => {
           </div>
 
           {/* Table */}
-          <div className="h-[44vh] w-fit overflow-y-auto scrollbar">
-            <div className="rounded-[20px] border-2 border-[#ffba00] me-2">
+          <div className="h-[40vh] w-fit overflow-y-auto scrollbar rounded-[20px] border-2 border-[#ffba00] ">
+            <div className=" border-1 border-[#ffba00] ">
               <table className="text-center w-7xl">
                 <thead className="text-sm">
                   <tr className="text-[1rem] bg-yellow-100">
-                    <th className="border px-4 py-2">S no.</th>
-                    <th className="border px-4 py-2">User</th>
-                    <th className="border px-4 py-2">Designation</th>
-                    <th className="border px-4 py-2">Department</th>
-                    <th className="border px-4 py-2">Emp. Layer</th>
-                    <th className="border px-4 py-2">Actions</th>
+                    <th className="border px-4 border-[#ffba00] py-2">S no.</th>
+                    <th className="border px-4 border-[#ffba00] py-2">User</th>
+                    <th className="border px-4 border-[#ffba00] py-2">Designation</th>
+                    <th className="border px-4 border-[#ffba00] py-2">Department</th>
+                    <th className="border px-4 border-[#ffba00] py-2">Emp. Layer</th>
+                    <th className="border px-4 border-[#ffba00] py-2">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
@@ -152,11 +152,11 @@ const TaskTable = () => {
                           : ""
                       }`}
                     >
-                      <td className="border px-4 py-1">{index + 1}</td>
+                      <td className="border px-4 py-1 border-[#ffba00]">{index + 1}</td>
 
                       {["name", "designation", "department", "empLayer"].map(
                         (field) => (
-                          <td className="border px-4 py-1" key={field}>
+                          <td className="border px-4 py-1 border-[#ffba00]" key={field}>
                             {task.isNew || task.isEditing ? (
                               <input
                                 value={task[field]}
@@ -174,7 +174,7 @@ const TaskTable = () => {
                         )
                       )}
 
-                      <td className="border px-4 py-1">
+                      <td className="border px-4 py-1 border-[#ffba00]">
                         {task.isNew || task.isEditing ? (
                           <button
                             onClick={() => {
