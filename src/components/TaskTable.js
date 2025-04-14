@@ -30,10 +30,9 @@ const TaskTable = () => {
       client: "CH BZR",
       project: "Character Bazaar",
       subject: "Work on Add",
-      createdBy: "Self",
+      createdBy: "Deepanshu Negi",
       assignedTo: "Vishal Bisht",
       startDate: "21/03/25",
-      
       deadline: "24/03/25",
       time: "10:11 am",
       status: "Open",
@@ -283,7 +282,7 @@ const rowRefs = useRef({});
         {/* Task Table */}
         <div className="h-[44vh] w-fit overflow-y-auto scroll scrollbar">
           <div className=" rounded-[20px] border-2 border-[#ffba00] h-[44vh] me-2 overflow-x-hidden">
-          <table className="  text-center w-7xl">
+          <table className="  text-center w-7xl " style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead className=" text-sm">
               <tr className="text-[1rem]">
                 {[
