@@ -103,6 +103,8 @@ const TaskTable = () => {
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [statusDropdown, setStatusDropdown] = useState(null);
+  const [assignDropdown, setAssignDropdown] = useState(null);
+
 
   const rowRefs = useRef({});
   const statuses = ["Done", "Pending", "Late", "In Review", "Open"];
@@ -329,26 +331,49 @@ const TaskTable = () => {
                     </td>
             
                     {/* Assign To */}
-                   <td className="border border-[#ffba00] px-2">
-                    {task.isNew ? (
-                      <input
-                        type="text"
-                        value={task.assignTo}
-                        onChange={(e) =>
-                          setTasks((prev) =>
-                            prev.map((t) =>
-                              t.id === task.id ? { ...t, assignTo: e.target.value } : t
-                            )
-                          )
+                    <td className="border border-[#ffba00] px-2 relative">
+                      {/* Assigned User Badge */}
+                      <span
+                        className="bg-blue-500 text-white px-3 py-1 rounded-full inline-block cursor-pointer"
+                        onClick={() =>
+                          setAssignDropdown(assignDropdown === task.id ? null : task.id)
                         }
-                        className="w-full px-2 py-1 rounded"
-                      />
-                    ) : (
-                      <span className="bg-blue-500 text-white px-3 py-1 rounded-full">
+                      >
                         {task.assignTo} {task.assignToSurname}
+                        <FontAwesomeIcon icon={faCaretDown} className="w-5 ml-2" />
                       </span>
-                    )}
+                      
+                      {/* Dropdown - only for active task */}
+                      {assignDropdown === task.id && (
+                        <div className="absolute top-full left-0 w-full text-center bg-[#616262] text-white rounded-[20px] py-2 text-lg z-10 shadow-md">
+                          {[
+                                               { first: "Aman", last: "Negi" },
+                            { first: "Vishal", last: "Bisht" },
+                            { first: "Deepanshu", last: "Negi" },
+                            { first: "Jay", last: "Negi" },
+                            {first:"Bharat",last:"Khathi"}
+                          ].map((person, index) => (
+                            <div
+                              key={index}
+                              className="cursor-pointer py-1 text-sm hover:bg-[#ffba00] hover:rounded-full"
+                              onClick={() => {
+                                setTasks(prev =>
+                                  prev.map(t =>
+                                    t.id === task.id
+                                      ? { ...t, assignTo: person.first, assignToSurname: person.last }
+                                      : t
+                                  )
+                                );
+                                setAssignDropdown(null); // close dropdown
+                              }}
+                            >
+                              {person.first} {person.last}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </td>
+
             
                     {/* Date Fields */}
                     {["inputsReceived", "startDate", "deadline", "feedbackReceived", "feedbackSent"].map(
