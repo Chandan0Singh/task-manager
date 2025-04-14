@@ -226,7 +226,7 @@ const rowRefs = useRef({});
 
               value={searchTerm}
               onChange={(e)=>setSearchTerm(e.target.value)}
-              placeholder="Search task..."
+              placeholder="Search by Client Name or Project Name"
               className="w-96 py-1 pl-6 px-1 border border-none bg-gray-200 rounded-full focus:outline-none focus:ring-2"
             /> 
           </div>

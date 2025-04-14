@@ -15,7 +15,7 @@ const TaskTable = () => {
       projectName: "Office Operations",
       subject: "Making salaries",
       createdBy: "Suraj Poswal",
-      assignTo: "Aman",
+      assignTo: "Aman ",
       assignToSurname:"Negi",
       inputsReceived: "21/03/25",
       startDate: "21/03/25",
@@ -33,7 +33,7 @@ const TaskTable = () => {
       subject: "Work on Add",
       createdBy: "Self",
       assignTo: "Vishal",
-      assignToSurname:"Bisht",
+      assignToSurname:" Bisht",
       inputsReceived: "21/03/25",
       startDate: "21/03/25",
       deadline: "24/03/25",
@@ -50,7 +50,7 @@ const TaskTable = () => {
       subject: "Work on Add",
       createdBy: "Self",
       assignTo: "Vishal",
-      assignToSurname:"Bisht",
+      assignToSurname:" Bisht",
       inputsReceived: "21/03/25",
       startDate: "21/03/25",
       deadline: "24/03/25",
@@ -66,8 +66,8 @@ const TaskTable = () => {
       projectName: "Character Bazaar",
       subject: "Work on Add",
       createdBy: "Self",
-      assignTo: "Vishal Bisht",
-      assignToSurname:"Bisht",
+      assignTo: "Vishal",
+      assignToSurname:" Bisht",
       inputsReceived: "21/03/25",
       startDate: "21/03/25",
       deadline: "24/03/25",
@@ -83,8 +83,8 @@ const TaskTable = () => {
       projectName: "Character Bazaar",
       subject: "Work on Add",
       createdBy: "Self",
-      assignTo: "Vishal Bisht", 
-      assignToSurname:"Bisht",
+      assignTo: "Vishal",
+      assignToSurname:" Bisht",
       inputsReceived: "21/03/25",
       startDate: "21/03/25",
       deadline: "24/03/25",
@@ -103,8 +103,6 @@ const TaskTable = () => {
   const [showSuggestion, setShowSuggestion] = useState(false);
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [statusDropdown, setStatusDropdown] = useState(null);
-  const [assignDropdown, setAssignDropdown] = useState(null);
-
 
   const rowRefs = useRef({});
   const statuses = ["Done", "Pending", "Late", "In Review", "Open"];
@@ -153,6 +151,31 @@ const TaskTable = () => {
     setTasks(tasks.filter(task => task.id !== id));
   };
 
+  const handleAddNewUser = () => {
+    setTasks((prev) => [
+      ...prev,
+      {
+        id: count,
+        client: "",
+        projectName: "",
+        subject: "",
+        createdBy: "",
+        assignTo: "",
+        assignToSurname:"",
+        inputsReceived: "",
+        startDate: "",
+        deadline: "",
+        time: "",
+        status: "",
+        sentToClient: "",
+        feedbackReceived: "",
+        feedbackSent: "",
+        isNew: true,
+      },
+    ]);
+    setCount(count + 1);
+  };
+
   return (
     <>
       {showForm && (
@@ -161,7 +184,7 @@ const TaskTable = () => {
         </div>
       )}
 
-      <div className="flex relative mx-auto w-fit">
+      <div className="flex relative mx-auto w-full">
         <div className="w-full">
           {/* Search & Create Task */}
           <div className="flex justify-between mb-3 w-[90%] mx-auto">
@@ -214,102 +237,182 @@ const TaskTable = () => {
                   ))}
                 </tr>
               </thead>
-              <tbody>
-                {tasks.map((task, idx) => (
-                  <tr
-                    key={task.id}
-                    ref={(el) => rowRefs.current[task.id] = el}
-                    className={`bg-white hover:bg-yellow-100 ${highlightedRow === task.id ? "bg-yellow-300 animate-pulse" : ""}`}
-                  >
-                    <td className="border border-[#ffba00] px-2">{idx + 1}</td>
-                    <td className="border border-[#ffba00] px-2">{task.client}</td>
-                    <td className="border border-[#ffba00] px-2">{task.projectName}</td>
-                    <td className="border border-[#ffba00] px-2">{task.subject}</td>
-                    <td className="border border-[#ffba00] px-2">{task.createdBy}</td>
-                    <td className="border border-[#ffba00] px-2 relative">
-                      {/* Assigned User Badge */}
-                      <span
-                        className="bg-blue-500 text-white px-3 py-1 rounded-full inline-block cursor-pointer"
-                        onClick={() =>
-                          setAssignDropdown(assignDropdown === task.id ? null : task.id)
+            <tbody>
+              {tasks.map((task, idx) => (
+                <tr
+                  key={task.id}           
+                  ref={(el) => (rowRefs.current[task.id] = el)}
+                  className={`bg-white hover:bg-yellow-100 ${
+                  highlightedRow === task.id ? "bg-yellow-300 animate-pulse" : ""
+                  }`}
+                >
+                  <td className="border border-[#ffba00] px-2">{idx + 1}</td>
+                
+                  {/* Editable Cell for Client */}
+                  <td className="border border-[#ffba00] px-2">
+                    {task.isNew ? (
+                      <input
+                        type="text"
+                        value={task.client}
+                        onChange={(e) =>
+                          setTasks((prev) =>
+                            prev.map((t) =>
+                              t.id === task.id ? { ...t, client: e.target.value } : t
+                            )
+                          )
                         }
-                      >
+                        className="w-full px-2 py-1 rounded"
+                      />
+                    ) : (
+                      task.client
+                    )}
+                  </td>
+                  
+                  {/* Project Name */}
+                  <td className="border border-[#ffba00] px-2">
+                    {task.isNew ? (
+                      <input
+                        type="text"
+                        value={task.projectName}
+                                   onChange={(e) =>
+                          setTasks((prev) =>
+                            prev.map((t) =>
+                            t.id === task.id ? { ...t, projectName: e.target.value } : t
+                            )
+                          )
+                        }
+                        className="w-full px-2 py-1 rounded"
+                      />
+                    ) : (
+                      task.projectName
+                    )}
+                  </td>
+
+                  {/* Subject */}
+                    <td className="border border-[#ffba00] px-2">
+                                    {task.isNew ? (
+                      <input
+                        type="text"
+                        value={task.subject}
+                        onChange={(e) =>
+                          setTasks((prev) =>
+                            prev.map((t) =>
+                              t.id === task.id ? { ...t, subject: e.target.value } : t
+                            )
+                          )
+                        }
+                        className="w-full px-2 py-1 rounded"
+                      />
+                    ) : (
+                      task.subject
+                    )}
+                    </td>
+            
+                    {/* Created By */}
+                    <td className="border border-[#ffba00] px-2">
+                      {task.isNew ? (
+                        <input
+                          type="text"
+                          value={task.createdBy}
+                          onChange={(e) =>
+                            setTasks((prev) =>
+                              prev.map((t) =>
+                                t.id === task.id ? { ...t, createdBy: e.target.value } : t
+                              )
+                            )
+                          }
+                          className="w-full px-2 py-1 rounded"
+                        />
+                      ) : (
+                        task.createdBy
+                     )}
+                    </td>
+            
+                    {/* Assign To */}
+                   <td className="border border-[#ffba00] px-2">
+                    {task.isNew ? (
+                      <input
+                        type="text"
+                        value={task.assignTo}
+                        onChange={(e) =>
+                          setTasks((prev) =>
+                            prev.map((t) =>
+                              t.id === task.id ? { ...t, assignTo: e.target.value } : t
+                            )
+                          )
+                        }
+                        className="w-full px-2 py-1 rounded"
+                      />
+                    ) : (
+                      <span className="bg-blue-500 text-white px-3 py-1 rounded-full">
                         {task.assignTo} {task.assignToSurname}
-                        <FontAwesomeIcon icon={faCaretDown} className="w-5 ml-2" />
                       </span>
-                      
-                      {/* Dropdown - only for active task */}
-                      {assignDropdown === task.id && (
-                        <div className="absolute top-full left-0 w-full text-center bg-[#616262] text-white rounded-[20px] py-2 text-lg z-10 shadow-md">
-                          {[
-                                               { first: "Aman", last: "Negi" },
-                            { first: "Vishal", last: "Bisht" },
-                            { first: "Deepanshu", last: "Negi" },
-                            { first: "Jay", last: "Negi" },
-                            {first:"Bharat",last:"Khathi"}
-                          ].map((person, index) => (
-                            <div
-                              key={index}
-                              className="cursor-pointer py-1 text-sm hover:bg-[#ffba00] hover:rounded-full"
-                              onClick={() => {
-                                setTasks(prev =>
-                                  prev.map(t =>
-                                    t.id === task.id
-                                      ? { ...t, assignTo: person.first, assignToSurname: person.last }
-                                      : t
-                                  )
-                                );
-                                setAssignDropdown(null); // close dropdown
-                              }}
-                            >
-                              {person.first} {person.last}
-                            </div>
-                          ))}
-                        </div>
+                    )}
+                    </td>
+            
+                    {/* Date Fields */}
+                    {["inputsReceived", "startDate", "deadline", "feedbackReceived", "feedbackSent"].map(
+                      (field) => (
+                        <td key={field} className="border px-2 border-[#ffba00] relative">
+                          {task[field]}
+                          <FontAwesomeIcon
+                            icon={faCalendarDays}
+                            onClick={() => setActivePicker({ id: task.id, field })}
+                            className="text-yellow-600 cursor-pointer ml-2"
+                          />
+                          {activePicker.id === task.id && activePicker.field === field && (
+                            <div className="absolute z-50 mt-2">
+                              <DatePicker
+                                selected={new Date()}
+                                onChange={(date) => handleCalendarChange(task.id, field, date)}
+                                inline
+                              />
+                              </div>
+                            )}
+                          </td>
+                        )
+                                    )}
+
+                      {/* Time */}
+                      <td className="border px-2 border-[#ffba00]">
+                        {task.isNew ? (
+                          <input
+                            type="text"
+                            value={task.time}
+                            onChange={(e) =>
+                              setTasks((prev) =>
+                                prev.map((t) =>
+                                t.id === task.id ? { ...t, time: e.target.value } : t
+                              )
+                            )
+                          }
+                          className="w-full px-2 py-1 rounded"
+                        />
+                      ) : (
+                        task.time
                       )}
                     </td>
-
-                    {["inputsReceived", "startDate", "deadline", "feedbackReceived", "feedbackSent"].map((field) => (
-                      <td key={field} className="border px-2 border-[#ffba00] relative">
-                        {task[field]}
-                        <FontAwesomeIcon
-                          icon={faCalendarDays}
-                          onClick={() => setActivePicker({ id: task.id, field })}
-                          className="text-yellow-600 cursor-pointer ml-2"
-                        />
-                        {activePicker.id === task.id && activePicker.field === field && (
-                          <div className="absolute z-50 mt-2">
-                            <DatePicker
-                              selected={new Date()}
-                              onChange={(date) => handleCalendarChange(task.id, field, date)}
-                              inline
-                            />
-                          </div>
-                        )}
-                      </td>
-                    ))}
-
-                    <td className="border px-2 border-[#ffba00]">{task.time}</td>
-
+                    
+                    {/* Status */}
                     <td className="border px-2 border-[#ffba00] relative">
                       <span
                         onClick={() => setStatusDropdown(task.id)}
                         className={`cursor-pointer px-2 py-1 rounded-full text-white ${
                           {
-                            "Done": "bg-green-500",
-                            "Pending": "bg-purple-500",
-                            "Late": "bg-red-500",
-                            "Open": "bg-yellow-500",
-                            "In Review": "bg-blue-500"
+                            Done: "bg-green-500",
+                            Pending: "bg-purple-500",
+                            Late: "bg-red-500",
+                            Open: "bg-yellow-500",
+                            "In Review": "bg-blue-500",
                           }[task.status] || "bg-gray-500"
                         }`}
                       >
                         {task.status} <FontAwesomeIcon icon={faCaretDown} />
                       </span>
-
+                      
                       {statusDropdown === task.id && (
                         <div className="absolute bg-[#616262] text-white w-[10vw] left-[-2vw] rounded-[20px] z-10 mt-1 py-2 shadow-md overflow-hidden">
-                          {statuses.map(status => (
+                          {statuses.map((status) => (
                             <div
                               key={status}
                               onClick={() => handleStatusChange(task.id, status)}
@@ -321,7 +424,8 @@ const TaskTable = () => {
                         </div>
                       )}
                     </td>
-
+                    
+                    {/* Sent to Client / Delete */}
                     <td className="border px-2 border-[#ffba00]">
                       <button
                         onClick={() => handleDelete(task.id)}
@@ -330,11 +434,18 @@ const TaskTable = () => {
                         Close
                       </button>
                     </td>
-                  </tr>
-                ))}
-              </tbody>
+                </tr>
+              ))}
+            </tbody>
+
             </table>
           </div>
+          <button
+            onClick={handleAddNewUser}
+            className="mt-4 px-6 py-2 bg-[#ffba00] border border-[#ffba00] rounded-full ms-[5%]"
+          >
+            + Add New User
+          </button>
         </div>
       </div>
     </>

@@ -40,13 +40,14 @@ const NavigationBar = () => {
             onClick={goToDepartments}
             className={`px-4 py-3 font-semibold hover:bg-gray-700 hover:text-white cursor-pointer hover:transition duration-150 ${pathname === "/departments" ? "bg-gray-700 text-white" : ""}`}
           >
-            Manage Department
+            User Management
+            
           </div>
           <div
             onClick={goToUsers}
             className={`px-4 py-3 font-semibold hover:bg-gray-700 hover:text-white cursor-pointer hover:transition duration-150 ${pathname === "/users" ? "bg-gray-700 text-white" : ""}`}
           >
-            User Management
+            Manage Project
           </div>
         </div>
         <div className=" px-8 py-3  font-semibold  text-white ">
