@@ -199,9 +199,6 @@ const TaskTable = () => {
                             >
                               Edit
                             </button>
-                            {/* <button className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">
-                              Close
-                            </button> */}
                           </div>
                         )}
                       </td>

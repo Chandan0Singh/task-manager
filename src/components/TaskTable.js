@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown ,faCalendarDays} from '@fortawesome/free-solid-svg-icons';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
+
 import CreateTask from "./createTaskForm"
 import { useRef } from "react";
 
@@ -19,8 +21,7 @@ const TaskTable = () => {
       subject: "Making salaries",
       createdBy: "Suraj Poswal",
       assignedTo: "Aman Negi",
-      startDate: "21/03/25",
-      
+      startDate: "21/03/25",    
       deadline: "24/03/25",
       time: "6:43 pm",
       status: "Open",
@@ -44,8 +45,7 @@ const TaskTable = () => {
       subject: "Work on Add",
       createdBy: "Self",
       assignedTo: "Vishal Bisht",
-      startDate: "21/03/25",
-      
+      startDate: "21/03/25",     
       deadline: "24/03/25",
       time: "10:11 am",
       status: "Open",
@@ -57,8 +57,7 @@ const TaskTable = () => {
       subject: "Work on Add",
       createdBy: "Self",
       assignedTo: "Vishal Bisht",
-      startDate: "21/03/25",
-      
+      startDate: "21/03/25",     
       deadline: "24/03/25",
       time: "10:11 am",
       status: "Open",
@@ -70,8 +69,7 @@ const TaskTable = () => {
       subject: "Work on Add",
       createdBy: "Self",
       assignedTo: "Vishal Bisht",
-      startDate: "21/03/25",
-      
+      startDate: "21/03/25",     
       deadline: "24/03/25",
       time: "10:11 am",
       status: "Open",
@@ -83,8 +81,7 @@ const TaskTable = () => {
       subject: "Work on Add",
       createdBy: "Self",
       assignedTo: "Vishal Bisht",
-      startDate: "21/03/25",
-      
+      startDate: "21/03/25",     
       deadline: "24/03/25",
       time: "10:11 am",
       status: "Open",
@@ -96,8 +93,7 @@ const TaskTable = () => {
       subject: "Work on Add",
       createdBy: "Self",
       assignedTo: "Vishal Bisht",
-      startDate: "21/03/25",
-      
+      startDate: "21/03/25",     
       deadline: "24/03/25",
       time: "10:11 am",
       status: "Open",
@@ -109,8 +105,7 @@ const TaskTable = () => {
       subject: "Work on Add",
       createdBy: "Self",
       assignedTo: "Vishal Bisht",
-      startDate: "21/03/25",
-      
+      startDate: "21/03/25",    
       deadline: "24/03/25",
       time: "10:11 am",
       status: "Open",
@@ -202,6 +197,26 @@ const rowRefs = useRef({});
     task.project.toLowerCase().includes(searchTerm.toLowerCase()) ||
     task.subject.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleAddNewUser = () => {
+    setTasks((prev) => [
+      ...prev,
+      {
+        id: count,
+        client: "",
+        project: "",
+        subject: "",
+        createdBy: "",
+        assignedTo: "",
+        startDate: "",
+        deadline: "",
+        time: "",
+        status: "",
+        isNew: true,
+      },
+    ]);
+    setCount(count + 1);
+  };
   
 
   return (
@@ -264,8 +279,6 @@ const rowRefs = useRef({});
 
           }
           
-
-          
           <div>
             <button
               onClick={() => setShowForm(!showForm)}
@@ -308,7 +321,7 @@ const rowRefs = useRef({});
               </tr>
             </thead>
             <tbody className="w-8xl text-sm">
-              {tasks.map((task, index) => (
+              {/* {tasks.map((task, index) => (
                 <tr key={task.id} className={`bg-white hover:bg-yellow-100 ${
                   highlightedRow === task.id ? "bg-yellow-300 animate-pulse" : ""
                 }`} ref={(el) => (rowRefs.current[task.id] = el)} >
@@ -436,11 +449,185 @@ const rowRefs = useRef({});
                     </button>
                   </td>
                 </tr>
+              ))} */}
+              {tasks.map((task, index) => (
+                <tr 
+                  key={task.id}
+                  ref={(el) => (rowRefs.current[task.id] = el)}
+                  className={`bg-white hover:bg-yellow-100 ${
+                    highlightedRow === task.id ? "bg-yellow-300 animate-pulse" : ""
+                  }`}
+                >
+                  <td className="border-2 border-[#ffba00] px-4 py-1 ">{index + 1}</td>
+                  {[
+                    "client",
+                    "project",
+                    "subject",
+                    "createdBy",
+                    "assignedTo",
+                    // "startDate",
+                    // "time",
+                    // "deadline",
+                   ].map((field) => (
+                    <td className="border-2 border-[#ffba00] px-4 py-1" key={field}>
+                        {task.isNew ? (
+                          <input
+                            value={task[field]}
+                            onChange={(e) => {
+                            const updated = [...tasks];
+                            updated[index][field] = e.target.value;
+                            setTasks(updated);
+                        }}
+                        className="w-full px-2 py-1 border rounded"
+                      />
+                     ) : (
+                      task[field]
+                     )}
+                    </td>
+                  ))}
+                  {["startDate", "deadline"].map((field) => {
+                    const uniqueId = task.id ?? task.tempId ?? index; // fallback if id not present
+
+                    return (
+                      <td className="border-2 border-[#ffba00] px-4 py-1 relative" key={field}>
+                        {task[field]}
+                        <FontAwesomeIcon
+                          icon={faCalendarDays}
+                          onClick={() => setActivePicker({ id: uniqueId, field })}
+                          className="text-yellow-600 cursor-pointer lg:ms-1.5"
+                        />
+                        {activePicker.id === uniqueId && activePicker.field === field && (
+                          <div className="absolute z-50 mt-2">
+                            <DatePicker
+                              selected={
+                                task[field]
+                                  ? new Date(task[field].split("/").reverse().join("-")) // from DD/MM/YYYY to YYYY-MM-DD
+                                  : new Date()
+                              }
+                              onChange={(date) => {
+                                const formattedDate = date.toLocaleDateString("en-GB"); // DD/MM/YYYY
+                                const updated = [...tasks];
+                                updated[index][field] = formattedDate;
+                                setTasks(updated);
+                                setActivePicker({ id: null, field: null });
+                              }}
+                              inline
+                            />
+                          </div>
+                        )}
+                      </td>
+                    );
+                  })}
+
+                  {["time"].map((field) => {
+                    const uniqueId = task.id ?? task.tempId ?? index;
+                  
+                    // Try to safely parse time string into a Date object
+                    const parseTimeString = (timeStr) => {
+                      if (!timeStr) return new Date();
+                      const [hour, minute] = timeStr.split(":");
+                      if (isNaN(hour) || isNaN(minute)) return new Date();
+                    
+                      const date = new Date();
+                      date.setHours(parseInt(hour));
+                      date.setMinutes(parseInt(minute));
+                      date.setSeconds(0);
+                      return date;
+                    };
+                  
+                    return (
+                      <td key={field} className="border-2 border-[#ffba00] px-4 py-1 relative">
+                        <span>{task[field] || "Select Time"}</span>
+                        <FontAwesomeIcon
+                          icon={faClock}                 
+                          onClick={() => setActivePicker({ id: uniqueId, field })}
+                          className="text-yellow-600 cursor-pointer ms-2"
+                        />
+                        {activePicker.id === uniqueId && activePicker.field === field && (
+                          <div className="absolute z-50 mt-2 bg-white shadow-lg rounded">
+                            <DatePicker
+                              selected={parseTimeString(task[field])}
+                              onChange={(date) => {
+                                const formattedTime = date.toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                });
+                          
+                                const updated = [...tasks];
+                                updated[index][field] = formattedTime;
+                                setTasks(updated);
+                                setActivePicker({ id: null, field: null });
+                              }}
+                              showTimeSelect
+                              showTimeSelectOnly
+                              timeCaption="Time"
+                              dateFormat="h:mm aa"
+                              inline
+                            />
+                          </div>
+                        )}
+                      </td>
+                    );
+                  })}
+
+                <td className="border-2 border-[#ffba00] px-1 relative">
+                    <span
+                      className={`text-white px-2 py-1 rounded-full cursor-pointer text-center ${
+                        task.status === "Done"
+                          ? "bg-green-500"
+                        : task.status === "Pending"
+                          ? "bg-purple-500"
+                          : task.status === "Late"
+                          ? "bg-red-500"
+                          : task.status === "Open"
+                        ? "bg-[#ffba00]"
+                          : task.status === "In Review"
+                          ? "bg-blue-500"
+                          : "bg-gray-500"
+                        }`}
+                      onClick={() => setShowOption(task.id)} // Change to task.id based logic
+                    >
+                      {task.status} <FontAwesomeIcon icon={faCaretDown} />
+                    </span>
+                 
+                  {showOPtion === task.id && (
+                   <div className="border mt-1 left-[-50%] shadow-md w-max text-center bg-[#616262] rounded-[20px]  text-white px-4py-1 py-2 text-lg px-[1.5rem] absolute z-9 flex flex-col items-center">
+                     {statuses.map((status) => (
+                       <div
+                          key={status}
+                          onClick={() => {
+                            statusHandler(task.id, status);
+                            setShowOption(null);
+                          }}
+                          className="cursor-pointer py-1 text-sm px-[3rem] w-full hover:bg-[#ffba00] hover:rounded-full"
+                                          >
+                          {status}
+                        </div>
+                      ))}
+                     </div>
+                    )}
+                  </td>
+                  <td className="border-2 border-[#ffba00] px-4 py-1">
+                    <button
+                      onClick={() => handleClose(task.id)}
+                      className="bg-red-500 text-white px-4 py-1 rounded-full text-sm  hover:bg-red-700 transition duration-200 cursor-pointer"
+                    >
+                      Close
+                    </button>
+                  </td>
+                </tr>
               ))}
-            </tbody>
+
+                          </tbody>
           </table>
           </div>
         </div>
+        <button
+            onClick={handleAddNewUser}
+            className="mt-4 px-6 py-2 bg-[#ffba00] border border-[#ffba00] rounded-full"
+          >
+            + Add New User
+          </button>
       </div>
     </div>
     </>

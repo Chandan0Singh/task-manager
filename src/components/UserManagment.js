@@ -399,14 +399,14 @@ const TaskTable = () => {
                                     )}
 
                       {/* Time */}
-                      <td className="border px-2 border-[#ffba00]">
-                        {task.isNew ? (
-                          <input
-                            type="text"
-                            value={task.time}
-                            onChange={(e) =>
-                              setTasks((prev) =>
-                                prev.map((t) =>
+                    <td className="border px-2 border-[#ffba00]">
+                      {task.isNew ? (
+                        <input
+                          type="date" // <-- yahan type change kiya
+                          value={task.time}
+                          onChange={(e) =>
+                            setTasks((prev) =>
+                              prev.map((t) =>
                                 t.id === task.id ? { ...t, time: e.target.value } : t
                               )
                             )
@@ -417,6 +417,7 @@ const TaskTable = () => {
                         task.time
                       )}
                     </td>
+
                     
                     {/* Status */}
                     <td className="border px-2 border-[#ffba00] relative">
