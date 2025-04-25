@@ -1,5 +1,5 @@
 "use client";
-import Logo from "@assets/Logo.jpeg";
+import Logo from "@assets/banner-01.webp";
 import Image from "next/image";
 import { useRouter } from "next/navigation";;
 import { usePathname } from "next/navigation"; // Correct hook
